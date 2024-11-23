@@ -21,18 +21,20 @@ class HomeController extends Controller
         $sales = Sale::completed()->sum('total_amount');
         $sale_returns = SaleReturn::completed()->sum('total_amount');
         $purchase_returns = PurchaseReturn::completed()->sum('total_amount');
+        $expenses = Expense::sum('amount') / 100;
         $product_costs = 0;
 
-        foreach (Sale::completed()->with('saleDetails')->get() as $sale) {
-            foreach ($sale->saleDetails as $saleDetail) {
-                if (!is_null($saleDetail->product)) {
-                    $product_costs += $saleDetail->product->product_cost * $saleDetail->quantity;
-                }
-            }
-        }
+        // foreach (Sale::completed()->with('saleDetails')->get() as $sale) {
+        //     foreach ($sale->saleDetails as $saleDetail) {
+        //         if (!is_null($saleDetail->product)) {
+        //             $product_costs += $saleDetail->product->product_cost * $saleDetail->quantity;
+        //         }
+        //     }
+        // }
 
         $revenue = ($sales - $sale_returns) / 100;
-        $profit = $revenue - $product_costs;
+        $profit = $revenue - $expenses;
+        
 
         return view('home', [
             'revenue'          => $revenue,

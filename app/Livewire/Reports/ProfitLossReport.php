@@ -163,14 +163,17 @@ class ProfitLossReport extends Component
 
         foreach ($sales as $sale) {
             foreach ($sale->saleDetails as $saleDetail) {
-                $product_costs += $saleDetail->product->product_cost;
+                $product_costs += $saleDetail->cost * $saleDetail->quantity; // Use the cost at the time of sale
             }
         }
+        // dd($product_costs);
 
         $profit = $revenue - $product_costs;
+        
 
         return $profit;
     }
+
 
     public function calculatePaymentsReceived() {
         $sale_payments = SalePayment::when($this->start_date, function ($query) {
